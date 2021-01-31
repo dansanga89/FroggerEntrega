@@ -45,6 +45,12 @@ namespace example
 
         { ID(tortugagrande),       "game-scene/bigturtles.png"           },
         { ID(tortugapequena),       "game-scene/smallturtles.png"           },
+
+
+        { ID(flechan),       "game-scene/arrowtop.png"           },
+        { ID(flechas),       "game-scene/arrowbottom.png"           },
+        { ID(flechae),       "game-scene/arrowright.png"           },
+        { ID(flechao),       "game-scene/arrowleft.png"           },
     };
 
     // Pâra determinar el número de items en el array textures_data, se divide el tamaño en bytes
@@ -121,7 +127,10 @@ namespace example
             {
                 case ID(touch-started):     // El usuario toca la pantalla
                 case ID(touch-moved):
+
                 {
+
+
                     user_target_y = *event[ID(y)].as< var::Float > ();
 
                     follow_target = true;
@@ -229,21 +238,29 @@ namespace example
     {
         // Se crean y configuran los sprites del fondo:
 
+        Sprite_Handle    tbutton(new Sprite( textures[ID(flechan)].get () ));
+        Sprite_Handle    bbutton(new Sprite( textures[ID(flechas)].get () ));
+       Sprite_Handle rbutton(new Sprite( textures[ID(flechae)].get () ));
+        Sprite_Handle lbutton(new Sprite( textures[ID(flechao)].get () ));
+
         Sprite_Handle    top_bar(new Sprite( textures[ID(hbar)].get () ));
-
-
         Sprite_Handle left_bar(new Sprite( textures[ID(vbar)].get () ));
         Sprite_Handle right_bar(new Sprite( textures[ID(vbar)].get () ));
-
         Sprite_Handle bottom_bar(new Sprite( textures[ID(hbar)].get () ));
-
 
         Sprite_Handle    bggrassmiddle(new Sprite( textures[ID(hierba)].get () ));
         Sprite_Handle    bggrassbottom(new Sprite( textures[ID(hierba)].get () ));
         Sprite_Handle bgroad(new Sprite( textures[ID(carretera)].get () ));
         Sprite_Handle bgwater(new Sprite( textures[ID(agua)].get () ));
 
-           top_bar->set_anchor   (TOP | LEFT);
+       lbutton->set_position ({canvas_width/1.42f, canvas_height / 30.f });
+        rbutton->set_position ({canvas_width/1.1f, canvas_height /  30.f });
+        tbutton->set_position ({canvas_width/10.f, canvas_height /  30.f });
+     bbutton->set_position ({canvas_width/3.33f, canvas_height /  30.f });
+
+
+
+        top_bar->set_anchor   (TOP | LEFT);
            top_bar->set_position ({ 0, canvas_height });
 
 
@@ -286,6 +303,12 @@ namespace example
         sprites.push_back (   right_bar);
 
         sprites.push_back (bottom_bar);
+
+        sprites.push_back (  tbutton);
+        sprites.push_back (   lbutton);
+        sprites.push_back (   rbutton);
+
+       sprites.push_back (bbutton);
 
         // Se crean los players y la bola: Y LOS COCHES
 
@@ -692,15 +715,27 @@ namespace example
             // debajo de su centro para establecer si tiene que subir o bajar:
 
 
-            float delta_x = user_target_x - right_player->get_position_x ();
 
-            if (delta_x < 0.f) right_player->set_speed_x (-player_speed); else
-            if (delta_x > 0.f) right_player->set_speed_x (+player_speed);
-
-            float delta_y = user_target_y - right_player->get_position_y ();
+            /*
+             *       float delta_y = user_target_y - right_player->get_position_y ();
 
             if (delta_y < 0.f) right_player->set_speed_y (-player_speed); else
-            if (delta_y > 0.f) right_player->set_speed_y (+player_speed);
+            if (delta_y > 0.f) right_player->set_speed_y (+player_speed);*/
+
+            /*
+            Point2f touch_location = { *event[ID(x)].as< var::Float > (), *event[ID(y)].as< var::Float > () };
+            if (option_at (touch_location) == UP)
+            {
+                 (delta_y > 0.f) right_player->set_speed_y (+player_speed);
+            }
+                  if (option_at (touch_location) == DOWN)
+            {
+           right_player->set_speed_y (-player_speed);
+            }
+*/
+
+
+
 
 
         }

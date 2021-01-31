@@ -96,6 +96,7 @@ namespace example
         Texture_Map    textures;                            ///< Mapa  en el que se guardan shared_ptr a las texturas cargadas.
         Sprite_List    sprites;                             ///< Lista en la que se guardan shared_ptr a los sprites creados.
 
+
         Sprite       * top_border;                          ///< Puntero al sprite de la lista de sprites que representa el borde superior.
         Sprite       * bottom_border;                       ///< Puntero al sprite de la lista de sprites que representa el borde inferior.
         Sprite       * left_player;                         ///< Puntero al sprite de la lista de sprites que representa al jugador izquierdo.
@@ -143,6 +144,12 @@ namespace example
         Sprite      *smalllog1;
         Sprite      *smalllog2;
         Sprite      *smalllog3;
+
+        Sprite      *larrow;
+        Sprite      *rarrow;
+        Sprite      *tarrow;
+        Sprite      *barrow;
+
 
 
         bool           follow_target;                       ///< true si el usuario está tocando la pantalla y su player ir hacia donde toca.
