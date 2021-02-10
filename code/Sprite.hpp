@@ -189,6 +189,7 @@ namespace example
          * @return true si el punto está dentro o false si está fuera.
          */
         bool contains (const Point2f & point);
+        bool checkbutton (float x, float y);
 
     public:
 

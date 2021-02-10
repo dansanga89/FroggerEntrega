@@ -78,4 +78,14 @@ namespace example
         return false;
     }
 
+    bool Sprite::checkbutton (float x, float y)
+    {
+        float this_left = this->get_left_x ();
+        float this_bottom = this->get_bottom_y ();
+
+        return x > this_left && y > this_bottom && x < this_left + size.width && y < this_bottom + size.height;
+    }
+
+
+
 }

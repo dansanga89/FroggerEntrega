@@ -122,74 +122,34 @@ namespace example
         {
             if (gameplay == WAITING_TO_START)
             {
+
                 start_playing ();           // Se empieza a jugar cuando el usuario toca la pantalla por primera vez
             }
             else switch (event.id)
             {
                 case ID(touch-started):     // El usuario toca la pantalla
                 {
-                    Point2f touch_location = { *event[ID(x)].as< var::Float > (), *event[ID(y)].as< var::Float > () };
+                    touch_location = { *event[ID(x)].as< var::Float > (), *event[ID(y)].as< var::Float > () };
 
 
                     user_target_x = *event[ID(x)].as< var::Float > ();
                     user_target_y = *event[ID(y)].as< var::Float > ();
 
-                    if(larrow->contains(touch_location))
-                    {
-                        right_player->set_speed_x (-player_speed);
-                    }
 
-
-/*
- *
-                    if(larrow->get_position() == (touch_location))
-                    {
-
-                    }
-*/
-/*
-                    for (auto & option : options)
-                    {
-
-
-                        if(option.position == touch_location )
-                        {
-                            if (option_at (touch_location) == ARROWUP)
-                            {
-                                right_player->set_speed_y (+player_speed);
-                            }
-                            if (option_at (touch_location) == ARROWDOWN)
-                            {
-                                right_player->set_speed_y (-player_speed);
-                            }
-                            if (option_at (touch_location) == ARROWLEFT)
-                            {
-                                right_player->set_speed_x (-player_speed);
-                            }
-                            if (option_at (touch_location) == ARROWRIGHT)
-                            {
-                                right_player->set_speed_x (+player_speed);
-                            }
-
-                        }
-
-                    }*/
-
-
-
-
+                    follow_target = true;
                     break;
                 }
 
                 case ID(touch-moved):
 
                 {
+
                     break;
                 }
 
                 case ID(touch-ended):       // El usuario deja de tocar la pantalla
                 {
-                    right_player->set_speed_x (0);
+
                     follow_target = false;
                     break;
                 }
@@ -312,11 +272,6 @@ namespace example
      bbutton->set_position ({canvas_width/3.33f, canvas_height /  30.f });
 
 
-        options[ARROWUP   ].position = tbutton->get_position();
-        options[ARROWDOWN ].position  = bbutton->get_position();
-        options[ARROWLEFT   ].position  = lbutton->get_position();
-        options[ARROWRIGHT].position  = bbutton->get_position();
-
 
 
 
@@ -332,8 +287,8 @@ namespace example
         right_bar->set_anchor   (LEFT);
         right_bar->set_position ({ canvas_width+300, canvas_height / 2.f });
 
-        bottom_bar->set_anchor   (BOTTOM | LEFT);
-        bottom_bar->set_position ({ 0, 0 });
+        bottom_bar->set_anchor   (LEFT);
+        bottom_bar->set_position ({ 0, canvas_height / 15.15f });
 
 
 
@@ -374,11 +329,9 @@ namespace example
         sprites.push_back (   rbutton);
        sprites.push_back (bbutton);
 
-        // Se crean los players y la bola: Y LOS COCHES
+       //Se crean el player y los elementos
 
-        Sprite_Handle  left_player_handle(new Sprite( textures[ID(player-bar)].get () ));
-        Sprite_Handle right_player_handle(new Sprite( textures[ID(frog)].get () ));
-        Sprite_Handle ball_handle(new Sprite( textures[ID(ball)      ].get () ));
+
 
 
 
@@ -412,13 +365,10 @@ namespace example
         Sprite_Handle smallturtle1_handle(new Sprite( textures[ID(tortugapequena)].get () ));
         Sprite_Handle smallturtle2_handle(new Sprite( textures[ID(tortugapequena)].get () ));
 
+        Sprite_Handle right_player_handle(new Sprite( textures[ID(frog)].get () ));
 
 
 
-
-        sprites.push_back ( left_player_handle);
-        sprites.push_back (right_player_handle);
-        sprites.push_back (        ball_handle);
 
         sprites.push_back (        truckll1_handle);
 
@@ -452,7 +402,7 @@ namespace example
 
         sprites.push_back (        smallturtle1_handle);
         sprites.push_back (        smallturtle2_handle);
-
+        sprites.push_back (right_player_handle);
 
 
 
@@ -462,9 +412,16 @@ namespace example
         bottom_border =          bottom_bar.get ();
         left_border      =         left_bar.get ();
         right_border      =         right_bar.get ();
-        left_player   =  left_player_handle.get ();
         right_player  = right_player_handle.get ();
-        ball          =         ball_handle.get ();
+larrow = lbutton.get();
+rarrow = rbutton.get();
+tarrow = tbutton.get();
+barrow = bbutton.get();
+        meta = grassgoal.get();
+
+
+
+
 
        truckmidlane1 = truckml1_handle.get();
 
@@ -517,14 +474,12 @@ namespace example
 
     void Game_Scene::restart_game()
     {
-        //lo mismo con los coches
 
-         left_player->set_position ({ left_player->get_width () * 3.f, canvas_height / 2.f });
-         left_player->set_speed_y  (0.f);
-        right_player->set_position ({ canvas_width / 2.f  , canvas_height / 10.f });
-        right_player->set_speed_y  (0.f);
-                ball->set_position ({ canvas_width / 2.f, canvas_height / 2.f });
-                ball->set_speed    ({ 0.f, 0.f });
+        follow_target=false;
+
+
+
+
 
         carblue1->set_position ({canvas_width/1.33f, canvas_height / 6.02f });
         carblue1->set_speed({ -1.f, 0.f });
@@ -617,7 +572,8 @@ namespace example
         bigturtle1->set_tag("transporte");
         bigturtle2->set_tag("transporte");
 
-        follow_target = false;
+        right_player->set_position ({ canvas_width / 2.f  , canvas_height / 10.f });
+        right_player->set_speed({ 0.f, 0.f });
 
         gameplay = WAITING_TO_START;
     }
@@ -674,7 +630,6 @@ namespace example
 
 
 
-        ball->set_speed_x (+ball_speed);
 
         gameplay = PLAYING;
     }
@@ -702,64 +657,13 @@ namespace example
     // Usando un algoritmo sencillo se controla automáticamente el comportamiento del jugador
     // izquierdo.
 
-    void Game_Scene::update_ai ()
-    {
+    void Game_Scene::update_ai () {
 
-        //TELETRANSPORTACION DE COCHES DEL BORDE EXTERIOR AL OTRO BORDE EXTERIOR
-        //SI DAN AL JUGADOR, LE QUITAN UNA VIDA
-        //AQUI HABRIA QUE METER LO DE LAS TORTUGAS ESCONDIENDOSE EN EL AGUA SI DA TIEMPO
-
-
-
-
-
-
-
-
-
-
-        if (left_player->intersects (*top_border))
+        if (biglog1ml->contains(right_player->get_position())||biglog1ll->contains(right_player->get_position()))
         {
-            // El player izquierdo ha tocado el borde superior, por lo que se debe quedar quieto:
-
-            left_player->set_position_y (top_border->get_bottom_y () - left_player->get_height () / 2.f);
-            left_player->set_speed_y (0.f);
+            right_player->set_speed_x (truck_speed);
         }
-        else
-        if (left_player->intersects (*bottom_border))
-        {
-            // El player izquierdo ha tocado el borde inferior, por lo que se debe quedar quieto:
 
-            left_player->set_position_y (bottom_border->get_top_y () + left_player->get_height () / 2.f);
-            left_player->set_speed_y (0.f);
-        }
-        else
-        {
-            // Se determina si la bola está por encima o por debajo del centro del player izquierdo
-            // para establecer si debe subir o bajar:
-
-            float delta_y = ball->get_position_y () - left_player->get_position_y ();
-
-            if (ball->get_speed_y () < 0.f)
-            {
-                if (delta_y < 0.f)
-                {
-                    left_player->set_speed_y (-player_speed * (ball->get_speed_x () < 0.f ? 1.f : .5f));
-                }
-                else
-                    left_player->set_speed_y (0.f);
-            }
-            else
-            if (ball->get_speed_y () > 0.f)
-            {
-                if (delta_y > 0.f)
-                {
-                    left_player->set_speed_y (+player_speed * (ball->get_speed_x () < 0.f ? 1.f : .5f));
-                }
-                else
-                    left_player->set_speed_y (0.f);
-            }
-        }
     }
 
     // ---------------------------------------------------------------------------------------------
@@ -770,16 +674,45 @@ namespace example
     void Game_Scene::update_user ()
     {
 
-        /*
-     if (right_player->intersects (*car1)) {
 
-         restart_game();
+     if (right_player->intersects (*caryellow1)||right_player->intersects (*caryellow2)
+     ||right_player->intersects (*carblue1)||right_player->intersects (*carblue2)
+     ||right_player->intersects (*carwhite1)||right_player->intersects (*carwhite2)
+      ||right_player->intersects (*truckmidlane1)||right_player->intersects (*trucklastlane1)
+     ) {
+//restart_game();
      }
 
-      *    //  si el jugador toca al agua  y no toca los sprites de tortuga o tronco se va a la puta
-      *
-      *   if (right_player->intersects (*tronco)) {
+        if (right_player->intersects (*smallturtle1)||right_player->intersects (*smallturtle2)
+            ||right_player->intersects (*bigturtle1)||right_player->intersects (*bigturtle2)
+            ) {
+            right_player->set_speed_x(-car1_speed);
 
+        }
+
+        if (right_player->intersects (*smallturtle1)||right_player->intersects (*smallturtle2)
+            ||right_player->intersects (*bigturtle1)||right_player->intersects (*bigturtle2)
+                ) {
+            right_player->set_speed_x(-car1_speed);
+
+        }
+
+
+
+
+
+        if (right_player->intersects (*meta)) {
+            restart_game();
+
+        }
+
+
+
+          //  si el jugador toca al agua  y no toca los sprites de tortuga o tronco se reinicia tambien
+      /*
+       if (right_player->intersects (*tronco)) {
+
+         rightplayer.
          rightplayer pilla la misma velocidad que el tronco excepto si toca con algun borde
      }
       *
@@ -810,24 +743,27 @@ namespace example
 
 
 
-            /*
-             *       float delta_y = user_target_y - right_player->get_position_y ();
-
-            if (delta_y < 0.f) right_player->set_speed_y (-player_speed); else
-            if (delta_y > 0.f) right_player->set_speed_y (+player_speed);*/
-
-
-
-
-
-
-
-
-
+            if(larrow->contains(touch_location))
+            {
+                right_player->set_speed_x (-player_speed);
+            }
+            if(rarrow->contains(touch_location))
+            {
+                right_player->set_speed_x (+player_speed);
+            }
+            if(tarrow->contains(touch_location))
+            {
+                right_player->set_speed_y (+player_speed);
+            }
+            if(barrow->contains(touch_location))
+            {
+                right_player->set_speed_y (-player_speed);
+            }
         }
-        else
-            right_player->set_speed_y (0);
-        right_player->set_speed_x (0);
+        else {
+            right_player->set_speed_y(0);
+            right_player->set_speed_x(0);
+        }
     }
 
     // ---------------------------------------------------------------------------------------------
@@ -953,67 +889,6 @@ namespace example
 
 
 
-
-        // Se comprueba si la bola choca con el borde superior o con el inferior, en cuyo caso se
-        // ajusta su posición para que no lo atraviese y se invierte su velocidad en el eje Y:
-
-        if (ball->intersects (*top_border))
-        {
-            ball->set_position_y (top_border->get_bottom_y () - ball->get_height() / 2.f);
-            ball->set_speed_y    (-ball->get_speed_y ());
-        }
-
-        if (ball->intersects (*bottom_border))
-        {
-            ball->set_position_y (bottom_border->get_top_y () + ball->get_height() / 2.f);
-            ball->set_speed_y    (-ball->get_speed_y ());
-        }
-
-        if (ball->intersects (*left_border))
-        {
-            ball->set_position_x (left_border->get_left_x () - ball->get_width() / 2.f);
-            ball->set_speed_x    (-ball->get_speed_x ());
-        }
-
-        if (ball->intersects (*right_border))
-        {
-            ball->set_position_x (right_border->get_right_x () + ball->get_width() / 2.f);
-            ball->set_speed_x    (-ball->get_speed_x ());
-        }
-
-        // Solo si la bola no ha superado alguno de los players, se comprueba si choca con alguno
-        // de ellos, en cuyo caso se ajusta su posición para que no los atraviese y se invierte su
-        // velocidad en el eje X:
-
-        if (gameplay != BALL_LEAVING)
-        {
-            if (ball->get_left_x () < left_player->get_right_x ())
-            {
-                if (ball->get_bottom_y () < left_player->get_top_y () && ball->get_top_y () > left_player->get_bottom_y ())
-                {
-                    ball->set_position_x (left_player->get_right_x () + ball->get_width() / 2.f);
-                    ball->set_speed_x    (-ball->get_speed_x ());
-                }
-                else
-                    gameplay = BALL_LEAVING;
-            }
-
-        /*    if (ball->get_right_x () > right_player->get_left_x ())
-            {
-                if (ball->get_bottom_y () < right_player->get_top_y () && ball->get_top_y () > right_player->get_bottom_y ())
-                {
-                    ball->set_position_x (right_player->get_left_x () - ball->get_width() / 2.f);
-                    ball->set_speed_x    (-ball->get_speed_x ());
-                }
-                else
-                    gameplay = BALL_LEAVING;
-            }*/
-        }
-        else
-        if (ball->get_right_x () < 0.f || ball->get_left_x () > float(canvas_width))
-        {
-            restart_game ();    //Y QUITAR VIDAS
-        }
     }
 
     // ---------------------------------------------------------------------------------------------

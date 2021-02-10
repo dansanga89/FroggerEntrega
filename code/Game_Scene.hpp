@@ -81,6 +81,9 @@ namespace example
 
         static const unsigned number_of_options = 4;
 
+
+
+
     private:
 
         /**
@@ -100,7 +103,7 @@ namespace example
         static constexpr float   car3_speed = 360.f;
         static constexpr float   truck_speed = 400.f;
         static constexpr float   ball_speed = 400.f;        ///< Velocidad a la que se mueve la bola (en unideades virtuales por segundo).
-        static constexpr float player_speed = 300.f;        ///< Velocidad a la que se mueven ambos jugadores (en unideades virtuales por segundo).
+        static constexpr float player_speed = 450.f;        ///< Velocidad a la que se mueven ambos jugadores (en unideades virtuales por segundo).
 
     private:
 
@@ -147,6 +150,7 @@ namespace example
         Sprite      *road;
         Sprite      *grass;
         Sprite      *water;
+        Sprite *meta;
 
         Sprite      *bigturtle1;
         Sprite      *bigturtle2;
@@ -172,7 +176,7 @@ namespace example
         bool           follow_target;                       ///< true si el usuario está tocando la pantalla y su player ir hacia donde toca.
         float          user_target_y;                       ///< Coordenada Y hacia donde debe ir el player del usuario cuando este toca la pantalla.
         float          user_target_x;                       ///< Coordenada X hacia donde debe ir el player del usuario cuando este toca la pantalla.
-
+        Point2f touch_location;
 
         Timer          timer;                               ///< Cronómetro usado para medir intervalos de tiempo
 
