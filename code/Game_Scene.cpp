@@ -62,6 +62,7 @@ namespace example
     // ---------------------------------------------------------------------------------------------
     // Definiciones de los atributos estáticos de la clase:
     constexpr float Game_Scene::  car1_speed;
+    constexpr float Game_Scene::  car2_speed;
     constexpr float Game_Scene::  truck_speed;
     constexpr float Game_Scene::  ball_speed;
     constexpr float Game_Scene::player_speed;
