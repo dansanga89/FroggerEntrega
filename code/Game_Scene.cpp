@@ -36,6 +36,7 @@ namespace example
 
         { ID(carretera),       "game-scene/road.png"           },
         { ID(hierba),       "game-scene/grass.png"           },
+        { ID(meta),       "game-scene/meta.png"           },
         { ID(agua),       "game-scene/water.png"           },
         { ID(coche1),       "game-scene/car1.png"           },
         { ID(coche2),       "game-scene/car2.png"           },
@@ -126,19 +127,69 @@ namespace example
             else switch (event.id)
             {
                 case ID(touch-started):     // El usuario toca la pantalla
+                {
+                    Point2f touch_location = { *event[ID(x)].as< var::Float > (), *event[ID(y)].as< var::Float > () };
+
+
+                    user_target_x = *event[ID(x)].as< var::Float > ();
+                    user_target_y = *event[ID(y)].as< var::Float > ();
+
+                    if(larrow->contains(touch_location))
+                    {
+                        right_player->set_speed_x (-player_speed);
+                    }
+
+
+/*
+ *
+                    if(larrow->get_position() == (touch_location))
+                    {
+
+                    }
+*/
+/*
+                    for (auto & option : options)
+                    {
+
+
+                        if(option.position == touch_location )
+                        {
+                            if (option_at (touch_location) == ARROWUP)
+                            {
+                                right_player->set_speed_y (+player_speed);
+                            }
+                            if (option_at (touch_location) == ARROWDOWN)
+                            {
+                                right_player->set_speed_y (-player_speed);
+                            }
+                            if (option_at (touch_location) == ARROWLEFT)
+                            {
+                                right_player->set_speed_x (-player_speed);
+                            }
+                            if (option_at (touch_location) == ARROWRIGHT)
+                            {
+                                right_player->set_speed_x (+player_speed);
+                            }
+
+                        }
+
+                    }*/
+
+
+
+
+                    break;
+                }
+
                 case ID(touch-moved):
 
                 {
-
-
-                    user_target_y = *event[ID(y)].as< var::Float > ();
-
-                    follow_target = true;
                     break;
                 }
 
                 case ID(touch-ended):       // El usuario deja de tocar la pantalla
                 {
+                    right_player->set_speed_x (0);
                     follow_target = false;
                     break;
                 }
@@ -238,6 +289,7 @@ namespace example
     {
         // Se crean y configuran los sprites del fondo:
 
+
         Sprite_Handle    tbutton(new Sprite( textures[ID(flechan)].get () ));
         Sprite_Handle    bbutton(new Sprite( textures[ID(flechas)].get () ));
        Sprite_Handle rbutton(new Sprite( textures[ID(flechae)].get () ));
@@ -250,6 +302,7 @@ namespace example
 
         Sprite_Handle    bggrassmiddle(new Sprite( textures[ID(hierba)].get () ));
         Sprite_Handle    bggrassbottom(new Sprite( textures[ID(hierba)].get () ));
+        Sprite_Handle    grassgoal(new Sprite( textures[ID(meta)].get () ));
         Sprite_Handle bgroad(new Sprite( textures[ID(carretera)].get () ));
         Sprite_Handle bgwater(new Sprite( textures[ID(agua)].get () ));
 
@@ -259,6 +312,14 @@ namespace example
      bbutton->set_position ({canvas_width/3.33f, canvas_height /  30.f });
 
 
+        options[ARROWUP   ].position = tbutton->get_position();
+        options[ARROWDOWN ].position  = bbutton->get_position();
+        options[ARROWLEFT   ].position  = lbutton->get_position();
+        options[ARROWRIGHT].position  = bbutton->get_position();
+
+
+
+
 
         top_bar->set_anchor   (TOP | LEFT);
            top_bar->set_position ({ 0, canvas_height });
@@ -266,10 +327,10 @@ namespace example
 
         left_bar->set_anchor   (LEFT);
 
-        left_bar->set_position ({ -120, canvas_height / 2.f });
+        left_bar->set_position ({ -300, canvas_height / 2.f });
 
         right_bar->set_anchor   (LEFT);
-        right_bar->set_position ({ canvas_width+220, canvas_height / 2.f });
+        right_bar->set_position ({ canvas_width+300, canvas_height / 2.f });
 
         bottom_bar->set_anchor   (BOTTOM | LEFT);
         bottom_bar->set_position ({ 0, 0 });
@@ -291,11 +352,15 @@ namespace example
         bggrassbottom->set_anchor   (BOTTOM);
         bggrassbottom->set_position ({ canvas_width/2.f, canvas_height / 14.f });
 
+
+        grassgoal->set_anchor   (BOTTOM);
+        grassgoal->set_position ({ canvas_width/2.f, canvas_height / 1.152f });
+
         sprites.push_back (bggrassbottom);
         sprites.push_back (bggrassmiddle);
         sprites.push_back (bgroad);
         sprites.push_back (bgwater);
-
+        sprites.push_back (grassgoal);
 
 
         sprites.push_back (  top_bar);
@@ -307,7 +372,6 @@ namespace example
         sprites.push_back (  tbutton);
         sprites.push_back (   lbutton);
         sprites.push_back (   rbutton);
-
        sprites.push_back (bbutton);
 
         // Se crean los players y la bola: Y LOS COCHES
@@ -320,29 +384,26 @@ namespace example
 
         Sprite_Handle caryellow1_handle(new Sprite( textures[ID(coche1)].get () ));
         Sprite_Handle caryellow2_handle(new Sprite( textures[ID(coche1)].get () ));
-        Sprite_Handle caryellow3_handle(new Sprite( textures[ID(coche1)].get () ));
+
         Sprite_Handle carblue1_handle(new Sprite( textures[ID(coche3)].get () ));
         Sprite_Handle carblue2_handle(new Sprite( textures[ID(coche3)].get () ));
 
         Sprite_Handle carwhite1_handle(new Sprite( textures[ID(coche2)].get () ));
         Sprite_Handle carwhite2_handle(new Sprite( textures[ID(coche2)].get () ));
-        Sprite_Handle carwhite3_handle(new Sprite( textures[ID(coche2)].get () ));
+
 
         Sprite_Handle truckml1_handle(new Sprite( textures[ID(truck)].get () ));
-        Sprite_Handle truckml2_handle(new Sprite( textures[ID(truck)].get () ));
+
 
         Sprite_Handle truckll1_handle(new Sprite( textures[ID(truck)].get () ));
-        Sprite_Handle truckll2_handle(new Sprite( textures[ID(truck)].get () ));
+;
+        Sprite_Handle biglog1ll_handle(new Sprite( textures[ID(troncogrande)].get () ));
 
         Sprite_Handle biglog1ml_handle(new Sprite( textures[ID(troncogrande)].get () ));
-        Sprite_Handle biglog2ml_handle(new Sprite( textures[ID(troncogrande)].get () ));
 
-        Sprite_Handle biglog1ll_handle(new Sprite( textures[ID(troncogrande)].get () ));
-        Sprite_Handle biglog2ll_handle(new Sprite( textures[ID(troncogrande)].get () ));
 
         Sprite_Handle smalllog1_handle(new Sprite( textures[ID(troncopequeno)].get () ));
         Sprite_Handle smalllog2_handle(new Sprite( textures[ID(troncopequeno)].get () ));
-        Sprite_Handle smalllog3_handle(new Sprite( textures[ID(troncopequeno)].get () ));
 
 
         Sprite_Handle bigturtle1_handle(new Sprite( textures[ID(tortugagrande)].get () ));
@@ -350,7 +411,6 @@ namespace example
 
         Sprite_Handle smallturtle1_handle(new Sprite( textures[ID(tortugapequena)].get () ));
         Sprite_Handle smallturtle2_handle(new Sprite( textures[ID(tortugapequena)].get () ));
-        Sprite_Handle smallturtle3_handle(new Sprite( textures[ID(tortugapequena)].get () ));
 
 
 
@@ -361,14 +421,14 @@ namespace example
         sprites.push_back (        ball_handle);
 
         sprites.push_back (        truckll1_handle);
-        sprites.push_back (        truckll2_handle);
+
         sprites.push_back (        truckml1_handle);
-        sprites.push_back (        truckml2_handle);
+
 
 
         sprites.push_back (        caryellow1_handle);
         sprites.push_back (        caryellow2_handle);
-        sprites.push_back (        caryellow3_handle);
+
 
         sprites.push_back (        carblue1_handle);
         sprites.push_back (        carblue2_handle);
@@ -376,24 +436,23 @@ namespace example
 
         sprites.push_back (        carwhite1_handle);
         sprites.push_back (        carwhite2_handle);
-        sprites.push_back (        carwhite3_handle);
+
 
         sprites.push_back (        biglog1ml_handle);
-        sprites.push_back (        biglog2ml_handle);
+
 
         sprites.push_back (        biglog1ll_handle);
-        sprites.push_back (        biglog2ll_handle);
+
 
         sprites.push_back (        smalllog1_handle);
         sprites.push_back (        smalllog2_handle);
-        sprites.push_back (        smalllog3_handle);
 
         sprites.push_back (        bigturtle1_handle);
         sprites.push_back (        bigturtle2_handle);
 
         sprites.push_back (        smallturtle1_handle);
         sprites.push_back (        smallturtle2_handle);
-        sprites.push_back (        smallturtle3_handle);
+
 
 
 
@@ -408,14 +467,14 @@ namespace example
         ball          =         ball_handle.get ();
 
        truckmidlane1 = truckml1_handle.get();
-       truckmidlane2 = truckml2_handle.get();
+
 
         trucklastlane1 = truckll1_handle.get();
-        trucklastlane2 = truckll2_handle.get();
+
 
         caryellow1          = caryellow1_handle.get();
         caryellow2          = caryellow2_handle.get();
-        caryellow3          = caryellow3_handle.get();
+
 
         carblue1          = carblue1_handle.get();
         carblue2          = carblue2_handle.get();
@@ -423,26 +482,26 @@ namespace example
 
         carwhite1          = carwhite1_handle.get();
         carwhite2          = carwhite2_handle.get();
-        carwhite3          = carwhite3_handle.get();
+
 
 
 
 
         smalllog1          = smalllog1_handle.get();
         smalllog2          = smalllog2_handle.get();
-        smalllog3          = smalllog3_handle.get();
+
 
         biglog1ml          = biglog1ml_handle.get();
-        biglog2ml        = biglog2ml_handle.get();
+
 
         biglog1ll          = biglog1ll_handle.get();
-        biglog2ll        = biglog2ll_handle.get();
+
 
 
 
         smallturtle1          = smallturtle1_handle.get();
         smallturtle2          = smallturtle2_handle.get();
-        smallturtle3         = smallturtle3_handle.get();
+
 
         bigturtle1          = bigturtle1_handle.get();
         bigturtle2        = bigturtle2_handle.get();
@@ -471,37 +530,45 @@ namespace example
         carblue1->set_speed({ -1.f, 0.f });
         carblue2->set_position ({canvas_width/4.f, canvas_height / 6.02f });
         carblue2->set_speed({ -1.f, 0.f });
+        carblue1->set_tag("vehiculo");
+        carblue2->set_tag("vehiculo");
 
 
-
-        truckmidlane1->set_position ({canvas_width/1.33f, canvas_height / 3.32f });
+        truckmidlane1->set_position ({canvas_width/4.f, canvas_height / 3.32f });
         truckmidlane1->set_speed({ 1.f, 0.f });
-        truckmidlane2->set_position ({canvas_width/4.f, canvas_height / 3.32f });
-        truckmidlane2->set_speed({ 1.f, 0.f });
+
+
+        truckmidlane1->set_tag("vehiculo");
+
 
         trucklastlane1->set_position ({canvas_width/1.33f, canvas_height / 2.30f });
         trucklastlane1->set_speed({ 1.f, 0.f });
-        trucklastlane2->set_position ({canvas_width/4.f, canvas_height / 2.30f });
-        trucklastlane2->set_speed({ 1.f, 0.f });
 
 
+        trucklastlane1->set_tag("vehiculo");
 
-        caryellow1->set_position ({canvas_width/6.f, canvas_height / 2.73f });
+
+        caryellow1->set_position ({canvas_width/1.33f, canvas_height / 2.73f });
         caryellow1->set_speed({ -1.f, 0.f });
-        caryellow2->set_position ({canvas_width/2.f, canvas_height / 2.73f });
+        caryellow2->set_position ({canvas_width/4.f, canvas_height / 2.73f });
         caryellow2->set_speed({ -1.f, 0.f });
-        caryellow3->set_position ({canvas_width/1.19f, canvas_height / 2.73f });
-        caryellow3->set_speed({ -1.f, 0.f });
+
+
+        caryellow1->set_tag("vehiculo");
+        caryellow2->set_tag("vehiculo");
 
 
 
 
-        carwhite1->set_position ({canvas_width/6.f, canvas_height / 4.27f });
+        carwhite1->set_position ({canvas_width/1.33f, canvas_height / 4.27f });
         carwhite1->set_speed({ -1.f, 0.f });
-        carwhite2->set_position ({canvas_width/2.f, canvas_height / 4.27f });
-        carwhite2->set_speed({ -1.f, 0.f });
-        carwhite3->set_position ({canvas_width/1.19f, canvas_height / 4.27f });
-        carwhite3->set_speed({ -1.f, 0.f });
+        carwhite2->set_position ({canvas_width/4.f, canvas_height / 4.27f });
+
+
+
+        carwhite1->set_tag("vehiculo");
+        carwhite2->set_tag("vehiculo");
+
 
 
 
@@ -510,28 +577,36 @@ namespace example
         smalllog1->set_speed({ -1.f, 0.f });
         smalllog2->set_position ({canvas_width/2.f, canvas_height / 1.57f });
         smalllog2->set_speed({ -1.f, 0.f });
-        smalllog3->set_position ({canvas_width/1.19f, canvas_height / 1.57f });
-        smalllog3->set_speed({ -1.f, 0.f });
+
+
+        smalllog1->set_tag("transporte");
+        smalllog2->set_tag("transporte");
 
 
         biglog1ml->set_position ({canvas_width/1.33f, canvas_height / 1.42f });
         biglog1ml->set_speed({ 1.f, 0.f });
-        biglog2ml->set_position ({canvas_width/4.f, canvas_height / 1.42f });
-        biglog2ml->set_speed({ 1.f, 0.f });
 
-        biglog1ll->set_position ({canvas_width/1.33f, canvas_height / 1.19f });
+
+        biglog1ml->set_tag("transporte");
+
+
+
+
+        biglog1ll->set_position ({canvas_width/4.f, canvas_height / 1.19f });
         biglog1ll->set_speed({ 1.f, 0.f });
-        biglog2ll->set_position ({canvas_width/4.f, canvas_height / 1.19f });
-        biglog2ll->set_speed({ 1.f, 0.f });
 
+
+        biglog1ll->set_tag("transporte");
 
 
         smallturtle1->set_position ({canvas_width/6.f, canvas_height / 1.76f });
         smallturtle1->set_speed({ -1.f, 0.f });
-        smallturtle2->set_position ({canvas_width/2.f, canvas_height / 1.76f });
+        smallturtle2->set_position ({canvas_width/1.19f, canvas_height / 1.76f });
         smallturtle2->set_speed({ -1.f, 0.f });
-        smallturtle3->set_position ({canvas_width/1.19f, canvas_height / 1.76f });
-        smallturtle3->set_speed({ -1.f, 0.f });
+
+
+        smallturtle1->set_tag("transporte");
+        smallturtle2->set_tag("transporte");
 
 
         bigturtle1->set_position ({canvas_width/1.33f, canvas_height / 1.30f });
@@ -539,7 +614,8 @@ namespace example
         bigturtle2->set_position ({canvas_width/4.f, canvas_height / 1.30f });
         bigturtle2->set_speed({ 1.f, 0.f });
 
-
+        bigturtle1->set_tag("transporte");
+        bigturtle2->set_tag("transporte");
 
         follow_target = false;
 
@@ -564,22 +640,39 @@ namespace example
 
         //MOVIMIENTOS LATERALES DE LOS COCHES
 
+
         caryellow1->set_speed_x (-car3_speed);
         caryellow2->set_speed_x (-car3_speed);
-        caryellow3->set_speed_x (-car3_speed);
+
 
         carwhite1->set_speed_x (-car2_speed);
         carwhite2->set_speed_x (-car2_speed);
-        carwhite3->set_speed_x (-car2_speed);
+
 
         carblue1->set_speed_x (-car1_speed);
         carblue2->set_speed_x (-car1_speed);
 
         truckmidlane1->set_speed_x (truck_speed);
-        truckmidlane2->set_speed_x (truck_speed);
 
         trucklastlane1->set_speed_x (truck_speed);
-        trucklastlane2->set_speed_x (truck_speed);
+
+        smalllog1->set_speed_x (+car2_speed);
+        smalllog2->set_speed_x (+car2_speed);
+
+
+        biglog1ml->set_speed_x (truck_speed);
+
+
+        biglog1ll->set_speed_x (truck_speed);
+
+        smallturtle1->set_speed_x (-car1_speed);
+                smallturtle2->set_speed_x (-car1_speed);
+
+
+                bigturtle1->set_speed_x (-car1_speed);
+        bigturtle2->set_speed_x (-car1_speed);
+
+
 
         ball->set_speed_x (+ball_speed);
 
@@ -693,6 +786,7 @@ namespace example
       * */
 
 
+
         if (right_player->intersects (*top_border))
         {
             // Si el player está tocando el borde superior, no puede ascender:
@@ -722,17 +816,9 @@ namespace example
             if (delta_y < 0.f) right_player->set_speed_y (-player_speed); else
             if (delta_y > 0.f) right_player->set_speed_y (+player_speed);*/
 
-            /*
-            Point2f touch_location = { *event[ID(x)].as< var::Float > (), *event[ID(y)].as< var::Float > () };
-            if (option_at (touch_location) == UP)
-            {
-                 (delta_y > 0.f) right_player->set_speed_y (+player_speed);
-            }
-                  if (option_at (touch_location) == DOWN)
-            {
-           right_player->set_speed_y (-player_speed);
-            }
-*/
+
+
+
 
 
 
@@ -750,6 +836,7 @@ namespace example
     {
 
 
+
         if (caryellow1 ->intersects (*left_border))
         {
             caryellow1->set_position_x (canvas_width+40);
@@ -764,11 +851,7 @@ namespace example
         }
 
 
-        if (caryellow3->intersects (*left_border))
-        {
-            caryellow3->set_position_x (canvas_width+40);
 
-        }
 
         if (carwhite1 ->intersects (*left_border))
         {
@@ -784,11 +867,7 @@ namespace example
         }
 
 
-        if (carwhite3->intersects (*left_border))
-        {
-            carwhite3->set_position_x (canvas_width+40);
 
-        }
 
         if (carblue1 ->intersects (*left_border))
         {
@@ -803,6 +882,32 @@ namespace example
 
         }
 
+        if (bigturtle1->intersects (*left_border))
+        {
+            bigturtle1->set_position_x (canvas_width+120);
+
+        }
+
+        if (bigturtle2->intersects (*left_border))
+        {
+            bigturtle2->set_position_x (canvas_width+120);
+
+        }
+
+        if (smallturtle1->intersects (*left_border))
+        {
+            smallturtle1->set_position_x (canvas_width+80);
+
+        }
+
+        if (smallturtle2->intersects (*left_border))
+        {
+            smallturtle2->set_position_x (canvas_width+80);
+
+        }
+
+
+
         if (truckmidlane1 ->intersects (*right_border))
         {
             truckmidlane1->set_position_x (-100);
@@ -810,11 +915,7 @@ namespace example
         }
 
 
-        if (truckmidlane2->intersects (*right_border))
-        {
-            truckmidlane2->set_position_x (-100);
 
-        }
 
         if (trucklastlane1 ->intersects (*right_border))
         {
@@ -822,12 +923,30 @@ namespace example
 
         }
 
-
-        if (trucklastlane2->intersects (*right_border))
+        if (biglog1ll ->intersects (*right_border))
         {
-            trucklastlane2->set_position_x (-100);
+            biglog1ll->set_position_x (-100);
 
         }
+
+        if (biglog1ml ->intersects (*right_border))
+        {
+            biglog1ml->set_position_x (-100);
+
+        }
+
+        if (smalllog1 ->intersects (*right_border))
+        {
+            smalllog1->set_position_x (-100);
+
+        }
+        if (smalllog2 ->intersects (*right_border))
+        {
+            smalllog2->set_position_x (-100);
+
+        }
+
+
 
 
 
@@ -924,5 +1043,20 @@ namespace example
             sprite->render (canvas);
         }
     }
+
+    int Game_Scene::option_at (const Point2f & point)
+    {
+        for (int index = 0; index < number_of_options; ++index)
+        {
+            const Option & option = options[index];
+
+
+                return index;
+
+        }
+
+        return -1;
+    }
+
 
 }

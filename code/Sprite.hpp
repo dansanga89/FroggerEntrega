@@ -35,7 +35,7 @@ namespace example
         Size2f       size;                      ///< Tamaño del sprite (normalmente en coordenadas virtuales).
         Point2f      position;                  ///< Posición del sprite (normalmente en coordenadas virtuales).
         float        scale;                     ///< Escala el tamaño del sprite. Por defecto es 1.
-
+        std::string         tag;
         Vector2f     speed;                     ///< Velocidad a la que se mueve el sprite. Usar el valor por defecto (0,0) para dejarlo quieto.
 
         bool         visible;                   ///< Indica si el sprite se debe actualizar y dibujar o no. Por defecto es true.
@@ -65,7 +65,8 @@ namespace example
         const float    & get_position_x () const { return  position[0]; }
         const float    & get_position_y () const { return  position[1]; }
         const Vector2f & get_speed      () const { return  speed;       }
-        const float    & get_speed_x    () const { return  speed[0];    }
+        const std::string& get_tag      () const { return  tag;}
+            const float    & get_speed_x    () const { return  speed[0];    }
         const float    & get_speed_y    () const { return  speed[1];    }
 
         float get_left_x () const
@@ -111,6 +112,11 @@ namespace example
         void set_anchor (int new_anchor)
         {
             anchor = new_anchor;
+        }
+
+        void set_tag (std::string new_tag)
+        {
+            tag = new_tag;
         }
 
         void set_position (const Point2f & new_position)

@@ -63,6 +63,24 @@ namespace example
             BALL_LEAVING,
         };
 
+        enum Option_Id
+        {
+            ARROWUP,
+            ARROWDOWN,
+            ARROWLEFT,
+            ARROWRIGHT
+        };
+
+        struct Option
+        {
+
+
+            Point2f position;
+
+        };
+
+        static const unsigned number_of_options = 4;
+
     private:
 
         /**
@@ -96,6 +114,7 @@ namespace example
         Texture_Map    textures;                            ///< Mapa  en el que se guardan shared_ptr a las texturas cargadas.
         Sprite_List    sprites;                             ///< Lista en la que se guardan shared_ptr a los sprites creados.
 
+        Option   options[number_of_options];                ///< Datos de las opciones del menú
 
         Sprite       * top_border;                          ///< Puntero al sprite de la lista de sprites que representa el borde superior.
         Sprite       * bottom_border;                       ///< Puntero al sprite de la lista de sprites que representa el borde inferior.
@@ -108,19 +127,19 @@ namespace example
         Sprite       * right_border;
         Sprite      *caryellow1;
         Sprite      *caryellow2;
-        Sprite      *caryellow3;
+
         Sprite      *carblue1;
         Sprite      *carblue2;
 
         Sprite      *truckmidlane1;
-        Sprite      *truckmidlane2;
+
 
         Sprite      *trucklastlane1;
-        Sprite      *trucklastlane2;
+
 
         Sprite      *carwhite1;
         Sprite      *carwhite2;
-        Sprite      *carwhite3;
+
         Sprite      *frogcharacter;
 
 
@@ -135,15 +154,13 @@ namespace example
 
         Sprite      *smallturtle1;
         Sprite      *smallturtle2;
-        Sprite      *smallturtle3;
 
         Sprite      *biglog1ml;
-        Sprite      *biglog2ml;
+
         Sprite      *biglog1ll;
-        Sprite      *biglog2ll;
+
         Sprite      *smalllog1;
         Sprite      *smalllog2;
-        Sprite      *smalllog3;
 
         Sprite      *larrow;
         Sprite      *rarrow;
@@ -269,6 +286,8 @@ namespace example
          */
         void render_playfield (Canvas & canvas);
 
+
+        int option_at (const Point2f & point);
     };
 
 }
