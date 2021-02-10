@@ -664,6 +664,22 @@ barrow = bbutton.get();
             right_player->set_speed_x (truck_speed);
         }
 
+        if (smalllog1->contains(right_player->get_position())||smalllog2->contains(right_player->get_position()))
+        {
+            right_player->set_speed_x (car2_speed);
+        }
+
+        if (smallturtle1->contains(right_player->get_position())||smallturtle2->contains(right_player->get_position())
+        ||bigturtle1->contains(right_player->get_position())||bigturtle2->contains(right_player->get_position())
+        )
+        {
+            right_player->set_speed_x (-car1_speed);
+        }
+
+
+
+
+
     }
 
     // ---------------------------------------------------------------------------------------------
@@ -680,24 +696,8 @@ barrow = bbutton.get();
      ||right_player->intersects (*carwhite1)||right_player->intersects (*carwhite2)
       ||right_player->intersects (*truckmidlane1)||right_player->intersects (*trucklastlane1)
      ) {
-//restart_game();
+restart_game();
      }
-
-        if (right_player->intersects (*smallturtle1)||right_player->intersects (*smallturtle2)
-            ||right_player->intersects (*bigturtle1)||right_player->intersects (*bigturtle2)
-            ) {
-            right_player->set_speed_x(-car1_speed);
-
-        }
-
-        if (right_player->intersects (*smallturtle1)||right_player->intersects (*smallturtle2)
-            ||right_player->intersects (*bigturtle1)||right_player->intersects (*bigturtle2)
-                ) {
-            right_player->set_speed_x(-car1_speed);
-
-        }
-
-
 
 
 

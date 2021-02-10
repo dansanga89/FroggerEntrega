@@ -47,9 +47,8 @@
             enum Option_Id
             {
                 PLAY,
-                SCORES,
-                HELP,
-                CREDITS
+                EXIT
+
             };
 
             struct Option
@@ -59,7 +58,7 @@
                 float   is_pressed;
             };
 
-            static const unsigned number_of_options = 4;
+            static const unsigned number_of_options = 2;
 
         private:
 

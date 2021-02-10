@@ -82,6 +82,11 @@ namespace example
                         director.run_scene (shared_ptr< Scene >(new Game_Scene));
                     }
 
+                    if (option_at (touch_location) == EXIT)
+                    {
+                        director.stop();
+                    }
+
                     break;
                 }
             }
@@ -173,9 +178,7 @@ namespace example
         // Se asigna un slice del atlas a cada opción del menú según su ID:
 
         options[PLAY   ].slice = atlas->get_slice (ID(play)   );
-        options[SCORES ].slice = atlas->get_slice (ID(scores) );
-        options[HELP   ].slice = atlas->get_slice (ID(help)   );
-        options[CREDITS].slice = atlas->get_slice (ID(credits));
+        options[EXIT   ].slice = atlas->get_slice (ID(exit)   );
 
         // Se calcula la altura total del menú:
 
